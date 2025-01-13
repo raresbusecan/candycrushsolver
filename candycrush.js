@@ -1,10 +1,8 @@
-// Inițializare matrice 11x11 cu bomboane aleatorii
 function generateMatrix() {
   let matrix = [];
   for (let i = 0; i < 11; i++) {
     let row = [];
     for (let j = 0; j < 11; j++) {
-      // Generăm un număr între 1 și 4, reprezentând bomboanele de diverse culori
       row.push(Math.floor(Math.random() * 4) + 1);
     }
     matrix.push(row);
@@ -12,23 +10,18 @@ function generateMatrix() {
   return matrix;
 }
 
-// Funcție pentru afișarea matricei
 function printMatrix(matrix) {
   for (let i = 0; i < matrix.length; i++) {
     matrix[i].join(" ");
   }
 }
 
-// Funcție pentru detectarea formațiunilor și acordarea punctajului corespunzător
 function checkForCombinations(matrix) {
   let points = 0;
   let combinations = [];
 
-  // Verificare linii orizontale și verticale de 4 și 5 bomboane
   for (let i = 0; i < 11; i++) {
     for (let j = 0; j < 11; j++) {
-      // Asigurăm că nu depășim dimensiunea pe orizontală
-      // Linie de 5 orizontală
       if (
         j + 4 < 11 &&
         matrix[i][j] === matrix[i][j + 1] &&
@@ -48,9 +41,7 @@ function checkForCombinations(matrix) {
             [i, j + 4],
           ],
         });
-      }
-      // Linie de 4 orizontală
-      else if (
+      } else if (
         j + 3 < 11 &&
         matrix[i][j] === matrix[i][j + 1] &&
         matrix[i][j] === matrix[i][j + 2] &&
@@ -73,8 +64,6 @@ function checkForCombinations(matrix) {
 
   for (let j = 0; j < 11; j++) {
     for (let i = 0; i < 8; i++) {
-      // Asigurăm că nu depășim dimensiunea pe verticală
-      // Linie de 5 verticală
       if (
         i + 4 < 11 &&
         matrix[i][j] === matrix[i + 1][j] &&
@@ -94,9 +83,7 @@ function checkForCombinations(matrix) {
             [i + 4, j],
           ],
         });
-      }
-      // Linie de 4 verticală
-      else if (
+      } else if (
         i + 3 < 11 &&
         matrix[i][j] === matrix[i + 1][j] &&
         matrix[i][j] === matrix[i + 2][j] &&
@@ -117,12 +104,10 @@ function checkForCombinations(matrix) {
     }
   }
 
-  // Verificare formațiuni de tip L și T
   for (let i = 0; i < 11; i++) {
     for (let j = 0; j < 11; j++) {
       let candy = matrix[i][j];
 
-      // Formație T originală
       if (
         candy !== 0 &&
         j + 2 < 11 &&
@@ -146,7 +131,6 @@ function checkForCombinations(matrix) {
         });
       }
 
-      // T inversat
       if (
         candy !== 0 &&
         j + 2 < 11 &&
@@ -170,7 +154,6 @@ function checkForCombinations(matrix) {
         });
       }
 
-      // T rotit la stânga
       if (
         candy !== 0 &&
         i + 2 < 11 &&
@@ -190,7 +173,6 @@ function checkForCombinations(matrix) {
             0;
       }
 
-      // T rotit la dreapta
       if (
         candy !== 0 &&
         i + 2 < 11 &&
@@ -210,7 +192,6 @@ function checkForCombinations(matrix) {
             0;
       }
 
-      // Formație L originală
       if (
         candy !== 0 &&
         i + 2 < 11 &&
@@ -234,7 +215,6 @@ function checkForCombinations(matrix) {
         });
       }
 
-      // L inversat
       if (
         candy !== 0 &&
         i + 2 < 11 &&
@@ -258,7 +238,6 @@ function checkForCombinations(matrix) {
         });
       }
 
-      // L rotit la stânga
       if (
         candy !== 0 &&
         i + 2 < 11 &&
@@ -282,7 +261,6 @@ function checkForCombinations(matrix) {
         });
       }
 
-      // L rotit la dreapta
       if (
         candy !== 0 &&
         j + 2 < 11 &&
@@ -306,12 +284,10 @@ function checkForCombinations(matrix) {
     }
   }
 
-  // Sortam combinatiile in functie de punctaj
   combinations.sort((a, b) => b.points - a.points);
   return { combinations, points };
 }
 
-// Funcție pentru a elimina combinațiile selectate
 function removeCombinations(matrix, combinations) {
   combinations.forEach((combination) => {
     combination.cells.forEach(([i, j]) => {
@@ -320,7 +296,6 @@ function removeCombinations(matrix, combinations) {
   });
 }
 
-// Funcție pentru rearanjarea bomboanelor după eliminarea formațiunilor
 function dropCandies(matrix) {
   for (let j = 0; j < 11; j++) {
     for (let i = 10; i >= 0; i--) {
@@ -334,7 +309,6 @@ function dropCandies(matrix) {
   }
 }
 
-// Funcție pentru realizarea unei singure mutări (interschimbare de două bomboane)
 function swapCandies(matrix, x1, y1, x2, y2) {
   let temp = matrix[x1][y1];
   matrix[x1][y1] = matrix[x2][y2];
@@ -342,21 +316,16 @@ function swapCandies(matrix, x1, y1, x2, y2) {
 
   let { points, combinations } = checkForCombinations(matrix);
   if (combinations.length > 0) {
-    // Dacă schimbul este valid, returnăm true și punctele câștigate
     return { valid: true, points, combinations };
   } else {
-    // Dacă schimbul nu este valid, revenim la starea inițială
     temp = matrix[x1][y1];
     matrix[x1][y1] = matrix[x2][y2];
     matrix[x2][y2] = temp;
 
-    // Returnăm false, schimbul nu a creat o combinație validă
     return { valid: false };
   }
 }
 
-// Funcție principală pentru rularea jocului
-// Funcția principală pentru gestionarea jocului
 function playGame(matrix, maxMoves) {
   let totalPoints = 0;
   let moves = 0;
@@ -367,7 +336,6 @@ function playGame(matrix, maxMoves) {
   while (moves < maxMoves) {
     let { combinations } = checkForCombinations(matrix);
 
-    // Dacă există combinații valide, le eliminăm
     if (combinations.length > 0) {
       totalPoints += combinations.reduce(
         (acc, combination) => acc + combination.points,
@@ -376,7 +344,6 @@ function playGame(matrix, maxMoves) {
       removeCombinations(matrix, combinations);
       dropCandies(matrix);
     } else {
-      // Căutăm cele mai bune schimburi pentru a aduna puncte mari
       let swapped = false;
       for (let i = 0; i < 11 && !swapped; i++) {
         for (let j = 0; j < 11 && !swapped; j++) {
@@ -385,7 +352,7 @@ function playGame(matrix, maxMoves) {
             if (swapResult.valid) {
               totalPoints += swapResult.points;
               swapped = true;
-            };
+            }
           }
 
           if (i < 10 && !swapped) {
@@ -393,7 +360,7 @@ function playGame(matrix, maxMoves) {
             if (swapResult.valid) {
               totalPoints += swapResult.points;
               swapped = true;
-            };
+            }
           }
         }
       }
@@ -411,6 +378,5 @@ function playGame(matrix, maxMoves) {
   return totalPoints;
 }
 
-// Inițializăm matricea și rulăm jocul cu un număr maxim de mutări (ex. 10000)
 let matrix = generateMatrix();
 playGame(matrix, 10000);
